@@ -6,12 +6,6 @@ export interface SimulationStats {
   successfulRuns: number;
   successRate: number;
   
-  // Maximum bet statistics
-  maxBets: number[];
-  avgMaxBet: number;
-  medianMaxBet: number;
-  maxBetConfidenceInterval: [number, number];
-  
   // Time statistics
   times: number[];
   avgTime: number;
@@ -22,9 +16,11 @@ export interface SimulationStats {
   totalRounds: number[];
   avgRounds: number;
   
-  // Financial statistics
+  // Financial statistics - Total Capital Required
   totalWagered: number[];
   avgTotalWagered: number;
+  medianTotalWagered: number;
+  totalWageredConfidenceInterval: [number, number];
 }
 
 /**
@@ -36,12 +32,11 @@ export class StatisticsCalculator {
    */
   static calculateStats(
     targetWin: number,
-    maxBets: number[],
     totalRounds: number[],
     totalWagered: number[],
     totalRuns: number
   ): SimulationStats {
-    const successfulRuns = maxBets.length;
+    const successfulRuns = totalWagered.length;
     const successRate = successfulRuns / totalRuns;
     
     // Convert rounds to time in days
@@ -55,12 +50,6 @@ export class StatisticsCalculator {
       successfulRuns,
       successRate,
       
-      // Maximum bet statistics
-      maxBets: [...maxBets],
-      avgMaxBet: this.mean(maxBets),
-      medianMaxBet: this.median(maxBets),
-      maxBetConfidenceInterval: this.confidenceInterval(maxBets),
-      
       // Time statistics
       times: [...times],
       avgTime: this.mean(times),
@@ -71,9 +60,11 @@ export class StatisticsCalculator {
       totalRounds: [...totalRounds],
       avgRounds: this.mean(totalRounds),
       
-      // Financial statistics
+      // Financial statistics - Total Capital Required
       totalWagered: [...totalWagered],
       avgTotalWagered: this.mean(totalWagered),
+      medianTotalWagered: this.median(totalWagered),
+      totalWageredConfidenceInterval: this.confidenceInterval(totalWagered),
     };
   }
 

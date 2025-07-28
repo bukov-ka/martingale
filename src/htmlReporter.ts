@@ -255,15 +255,17 @@ export class HtmlReporter {
             ${this.generateResultsSections(allStats)}
             
             <div class="methodology">
-                <h3>📈 Methodology & Important Notes</h3>
+                <h3>📈 Methodology & Key Insights</h3>
                 <p><strong>Martingale Strategy:</strong> Double the bet after each loss until you win, then reset to the initial bet. The strategy aims to recover all previous losses plus win a profit equal to the original stake.</p>
                 
-                <p><strong>Confidence Intervals:</strong> The 90% confidence intervals indicate that we can be 90% confident that the true average falls within the given range. These are calculated using the t-distribution for robust statistical analysis.</p>
+                <p><strong>Total Capital Required:</strong> This represents the total amount of money you need to put at risk during your entire session to reach your target. This is different from individual bet sizes - it's your total exposure.</p>
                 
-                <p><strong>Time Calculation:</strong> Assumes ${SIMULATION_CONFIG.MINUTES_PER_ROUND} minute${SIMULATION_CONFIG.MINUTES_PER_ROUND > 1 ? 's' : ''} per roulette spin, converted to days (24-hour periods).</p>
+                <p><strong>90% Confidence Intervals:</strong> We can be 90% confident that the true average total capital requirement falls within this range. These intervals help you plan for realistic scenarios, not just best-case outcomes.</p>
+                
+                <p><strong>Average vs. Median:</strong> The median shows what 50% of players experience, while the average accounts for rare but extreme scenarios. The difference reveals the hidden risks of the Martingale system.</p>
                 
                 <div class="warning">
-                    <strong>⚠️ Risk Warning:</strong> The Martingale system can lead to catastrophic losses due to exponential bet growth. Even with high success rates, the few failures can be financially devastating. This simulation has a safety limit of $${StatisticsCalculator.formatNumber(SIMULATION_CONFIG.MAX_BANKROLL, 0)} to prevent infinite losses.
+                    <strong>💡 Key Insight:</strong> Even with 99%+ success rates, the total capital you need to put at risk is often much higher than your target winnings. The few failed attempts (hitting the $${StatisticsCalculator.formatNumber(SIMULATION_CONFIG.MAX_BANKROLL, 0)} limit) would result in catastrophic losses that far exceed all previous gains.
                 </div>
             </div>
         </div>
@@ -297,59 +299,46 @@ export class HtmlReporter {
                         <p style="margin: 5px 0 0 0;">${StatisticsCalculator.formatNumber(stats.successfulRuns, 0)} successful runs out of ${StatisticsCalculator.formatNumber(stats.totalRuns, 0)} total runs</p>
                     </div>
                     
-                    ${stats.successfulRuns > 0 ? `
-                    <div class="stats-grid">
-                        <div class="stat-card">
-                            <div class="stat-label">Average Maximum Bet</div>
-                            <div class="stat-value">$${StatisticsCalculator.formatNumber(stats.avgMaxBet)}</div>
-                            <div class="confidence-interval">
-                                <strong>90% Confidence Interval:</strong><br>
-                                $${StatisticsCalculator.formatNumber(stats.maxBetConfidenceInterval[0])} - $${StatisticsCalculator.formatNumber(stats.maxBetConfidenceInterval[1])}
-                            </div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-label">Median Maximum Bet</div>
-                            <div class="stat-value">$${StatisticsCalculator.formatNumber(stats.medianMaxBet)}</div>
-                            <p style="margin: 10px 0 0 0; font-size: 0.9em; color: #6c757d;">
-                                50% of successful runs had max bets below this value
-                            </p>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-label">Average Time Required</div>
-                            <div class="stat-value">${StatisticsCalculator.formatTime(stats.avgTime)}</div>
-                            <div class="confidence-interval">
-                                <strong>90% Confidence Interval:</strong><br>
-                                ${StatisticsCalculator.formatTime(stats.timeConfidenceInterval[0])} - ${StatisticsCalculator.formatTime(stats.timeConfidenceInterval[1])}
-                            </div>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-label">Median Time Required</div>
-                            <div class="stat-value">${StatisticsCalculator.formatTime(stats.medianTime)}</div>
-                            <p style="margin: 10px 0 0 0; font-size: 0.9em; color: #6c757d;">
-                                50% of successful runs completed faster than this
-                            </p>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-label">Average Rounds Played</div>
-                            <div class="stat-value">${StatisticsCalculator.formatNumber(stats.avgRounds, 0)}</div>
-                            <p style="margin: 10px 0 0 0; font-size: 0.9em; color: #6c757d;">
-                                Average number of roulette spins
-                            </p>
-                        </div>
-                        
-                        <div class="stat-card">
-                            <div class="stat-label">Average Total Wagered</div>
-                            <div class="stat-value">$${StatisticsCalculator.formatNumber(stats.avgTotalWagered)}</div>
-                            <p style="margin: 10px 0 0 0; font-size: 0.9em; color: #6c757d;">
-                                Total amount bet across all rounds
-                            </p>
-                        </div>
-                    </div>
-                    ` : `
+                                         ${stats.successfulRuns > 0 ? `
+                     <div class="stats-grid">
+                         <div class="stat-card">
+                             <div class="stat-label">💰 Average Total Capital Required</div>
+                             <div class="stat-value">$${StatisticsCalculator.formatNumber(stats.avgTotalWagered)}</div>
+                             <div class="confidence-interval">
+                                 <strong>90% Confidence Interval:</strong><br>
+                                 $${StatisticsCalculator.formatNumber(stats.totalWageredConfidenceInterval[0])} - $${StatisticsCalculator.formatNumber(stats.totalWageredConfidenceInterval[1])}
+                             </div>
+                             <p style="margin: 10px 0 0 0; font-size: 0.9em; color: #6c757d;">
+                                 Total amount you need to put at risk
+                             </p>
+                         </div>
+                         
+                         <div class="stat-card">
+                             <div class="stat-label">📊 Median Total Capital Required</div>
+                             <div class="stat-value">$${StatisticsCalculator.formatNumber(stats.medianTotalWagered)}</div>
+                             <p style="margin: 10px 0 0 0; font-size: 0.9em; color: #6c757d;">
+                                 50% of successful runs required less capital than this
+                             </p>
+                         </div>
+                         
+                         <div class="stat-card">
+                             <div class="stat-label">⏱️ Average Time Required</div>
+                             <div class="stat-value">${StatisticsCalculator.formatTime(stats.avgTime)}</div>
+                             <div class="confidence-interval">
+                                 <strong>90% Confidence Interval:</strong><br>
+                                 ${StatisticsCalculator.formatTime(stats.timeConfidenceInterval[0])} - ${StatisticsCalculator.formatTime(stats.timeConfidenceInterval[1])}
+                             </div>
+                         </div>
+                         
+                         <div class="stat-card">
+                             <div class="stat-label">📈 Median Time Required</div>
+                             <div class="stat-value">${StatisticsCalculator.formatTime(stats.medianTime)}</div>
+                             <p style="margin: 10px 0 0 0; font-size: 0.9em; color: #6c757d;">
+                                 50% of successful runs completed faster than this
+                             </p>
+                         </div>
+                     </div>
+                     ` : `
                     <div class="warning">
                         <strong>No Successful Runs:</strong> All ${StatisticsCalculator.formatNumber(stats.totalRuns, 0)} simulation runs failed to reach the target of $${stats.targetWin} before hitting the bankroll limit of $${StatisticsCalculator.formatNumber(SIMULATION_CONFIG.MAX_BANKROLL, 0)}.
                     </div>

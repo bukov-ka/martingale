@@ -73,14 +73,14 @@ export class Logger {
   /**
    * Logs simulation results summary
    */
-  static results(targetWin: number, successfulRuns: number, totalRuns: number, avgMaxBet: number, avgTime: number): void {
+  static results(targetWin: number, successfulRuns: number, totalRuns: number, avgTotalWagered: number, avgTime: number): void {
     const successRate = ((successfulRuns / totalRuns) * 100).toFixed(1);
     const timeStr = this.formatTime(avgTime);
     
     this.log(`🎯 Results for $${targetWin} target:`);
     this.log(`   Success Rate: ${successRate}% (${successfulRuns}/${totalRuns})`);
     if (successfulRuns > 0) {
-      this.log(`   Average Max Bet: $${avgMaxBet.toLocaleString()}`);
+      this.log(`   Average Total Wagered: $${avgTotalWagered.toLocaleString()}`);
       this.log(`   Average Time: ${timeStr}`);
     }
     this.log('');

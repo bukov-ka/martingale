@@ -46,7 +46,7 @@ export class Simulator {
         stats.targetWin,
         stats.successfulRuns,
         stats.totalRuns,
-        stats.avgMaxBet,
+        stats.avgTotalWagered,
         stats.avgTime
       );
       
@@ -68,7 +68,6 @@ export class Simulator {
    * Runs simulation for a specific target winning amount
    */
   private async runSimulationForTarget(targetWin: number): Promise<SimulationStats> {
-    const maxBets: number[] = [];
     const totalRounds: number[] = [];
     const totalWagered: number[] = [];
     
@@ -80,7 +79,6 @@ export class Simulator {
       
       if (result.success) {
         successfulRuns++;
-        maxBets.push(result.maxBet);
         totalRounds.push(result.totalRounds);
         totalWagered.push(result.totalWagered);
       }
@@ -102,7 +100,6 @@ export class Simulator {
 
     return StatisticsCalculator.calculateStats(
       targetWin,
-      maxBets,
       totalRounds,
       totalWagered,
       SIMULATION_CONFIG.TOTAL_RUNS
