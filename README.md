@@ -2,6 +2,8 @@
 
 A comprehensive TypeScript simulation of the [Martingale betting strategy](https://en.wikipedia.org/wiki/Martingale_(betting_system)) on roulette, designed to analyze capital requirements, success rates, and time investments across different target winnings.
 
+Read about the experiment and its development process in [AI Simulates the Martingale Betting System with Cursor Agents](https://konstantin.gladyou.click/posts/2025-07-30-ai-simulates-the-martingale-betting-system-with-cursor-agents/).
+
 ## 📊 What This Simulation Does
 
 This Monte Carlo simulation runs **100,000 trials** for each target winning amount to statistically analyze:
